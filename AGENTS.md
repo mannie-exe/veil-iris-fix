@@ -1,8 +1,10 @@
 # Veil Iris Fix
 
-Keep this a narrow client compatibility mod. README owns supported versions,
-verification and the upstream removal condition. Follow sibling dh-polygon-fix
-build conventions; no world data, downloaded JARs or decompiled source in Git.
+Keep this a narrow client compatibility mod. README owns installation,
+support and the upstream removal condition.
+`docs/development.md` owns implementation and update procedures;
+`docs/verification.md` owns dated evidence; `docs/publishing.md` owns releases.
+Keep world data, downloaded JARs and decompiled source out of Git.
 
 Preserve the exact Sable/nested Veil and Iris input hashes and runtime guards.
 Review upstream before changing them. The original Veil injection must remain
@@ -11,6 +13,6 @@ normal and exceptional paths. `./gradlew check build` is required after code or
 build changes. Controlled GL/Iris tests do not establish native rendering.
 
 Use disposable Minecraft instances for shader/Ponder checks. Leave running play
-instances untouched. Keep the candidate uninstalled until native verification;
+instances untouched. Verify rendering before distributing behavior changes;
 do not commit, push or publish without authorization. Document current behavior
 and limits directly, without a separate review ledger.
