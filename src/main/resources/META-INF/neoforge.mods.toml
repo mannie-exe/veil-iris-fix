@@ -1,0 +1,34 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="LGPL-3.0-only"
+issueTrackerURL="https://github.com/mannie-exe/veil-iris-fix/issues"
+[[mods]]
+modId="veil_iris_fix"
+version="${version}"
+displayName="Veil Iris Fix"
+displayURL="https://github.com/mannie-exe/veil-iris-fix"
+authors="mannie-exe"
+description="Restores framebuffer bindings around Veil shaders when used with Iris."
+[[mixins]]
+config="veil_iris_fix.mixins.json"
+[[dependencies.veil_iris_fix]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.264,21.2)"
+side="BOTH"
+[[dependencies.veil_iris_fix]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+side="BOTH"
+[[dependencies.veil_iris_fix]]
+modId="veil"
+type="required"
+versionRange="[4.3.2]"
+side="CLIENT"
+reason="Temporary correction for Veil 4.3.2; review upstream before upgrading"
+[[dependencies.veil_iris_fix]]
+modId="iris"
+type="required"
+versionRange="[1.8.14-beta.1+mc1.21.1]"
+side="CLIENT"

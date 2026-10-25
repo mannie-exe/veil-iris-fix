@@ -1,0 +1,8 @@
+Veil Iris Fix
+
+Framebuffer restoration and Iris pass selection are based on CuddlesPrime's
+Veil PR #213 (7ec9af4602fb93062fd9debe94b61adfd0e22bf3), LGPL-3.0-only.
+https://github.com/FoundryMC/Veil/pull/213
+
+Build and isolated Mixin test infrastructure adapted from dh-polygon-fix.
+https://github.com/mannie-exe/dh-polygon-fix

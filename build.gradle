@@ -1,0 +1,79 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+version = mod_version
+group = 'design.inherent'
+base.archivesName = 'veil-iris-fix'
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+repositories {
+    mavenCentral()
+    maven { url = 'https://api.modrinth.com/maven'; content { includeGroup 'maven.modrinth' } }
+}
+neoForge {
+    version = '21.1.264'
+    mods { veil_iris_fix { sourceSet(sourceSets.main) } }
+}
+configurations { sable }
+def veilJar = layout.buildDirectory.file('dependencies/veil-4.3.2.jar')
+def extractVeil = tasks.register('extractVeil') {
+    inputs.files(configurations.sable)
+    outputs.file(veilJar)
+    doLast {
+        def sable = configurations.sable.singleFile
+        def digest = { bytes -> java.security.MessageDigest.getInstance('SHA-256').digest(bytes).encodeHex().toString() }
+        if (digest(sable.bytes) != '9c199157843bf953a47dff625fc5bb41c01a90538d35ad18e6996bbcb8a617c2') throw new GradleException('Unexpected Sable artifact')
+        new java.util.zip.ZipFile(sable).withCloseable { zip ->
+            def bytes = zip.getInputStream(zip.getEntry('META-INF/jarjar/veil-neoforge-1.21.1-4.3.2.jar')).bytes
+            if (digest(bytes) != '774b83887d882dc47cd4d29d140cef0c8677747a6fe7799649f490926a4e0265') throw new GradleException('Unexpected nested Veil artifact')
+            veilJar.get().asFile.parentFile.mkdirs()
+            veilJar.get().asFile.bytes = bytes
+        }
+    }
+}
+sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
+sourceSets.test.runtimeClasspath += sourceSets.main.runtimeClasspath
+dependencies {
+    sable('maven.modrinth:sable:fg9dTRz9') { transitive = false }
+    compileOnly('maven.modrinth:iris:KduFYu4t') { transitive = false }
+    testImplementation(files(veilJar).builtBy(extractVeil))
+    testImplementation('maven.modrinth:iris:KduFYu4t') { transitive = false }
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'io.github.llamalad7:mixinextras-neoforge:0.5.5'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+tasks.withType(AbstractArchiveTask).configureEach { preserveFileTimestamps = false; reproducibleFileOrder = true }
+tasks.named('jar', Jar) {
+    archiveFileName = "veil-iris-fix-${version}-mc1.21.1-neoforge.jar"
+    from('LICENSE.txt', 'LICENSE.LESSER.txt', 'NOTICE')
+}
+tasks.named('sourcesJar', Jar) { from('LICENSE.txt', 'LICENSE.LESSER.txt', 'NOTICE') }
+tasks.named('processResources', ProcessResources) {
+    inputs.property 'version', project.version
+    filesMatching('META-INF/neoforge.mods.toml') { expand version: project.version }
+}
+tasks.named('test', Test) { useJUnitPlatform() }
+
+tasks.register('serverProbe', JavaExec) {
+    dependsOn 'testClasses'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'design.inherent.veilirisfix.test.ServerProbe'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+}
+tasks.register('verifyIris') {
+    inputs.files(configurations.compileClasspath)
+    doLast {
+        def iris = configurations.compileClasspath.resolvedConfiguration.resolvedArtifacts.find {
+            it.moduleVersion.id.group == 'maven.modrinth' && it.name == 'iris'
+        }?.file
+        if (iris == null) throw new GradleException('Pinned Iris artifact missing')
+        def digest = java.security.MessageDigest.getInstance('SHA-256').digest(iris.bytes).encodeHex().toString()
+        if (digest != '60d5f8bf52f25e9986440f4a4270a6bd986d9cff994510e1108ac1547063b314') throw new GradleException('Unexpected Iris artifact')
+    }
+}
+tasks.named('check') { dependsOn 'serverProbe', 'verifyIris' }
