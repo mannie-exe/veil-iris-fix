@@ -16,3 +16,9 @@ Use disposable Minecraft instances for shader/Ponder checks. Leave running play
 instances untouched. Verify rendering before distributing behavior changes;
 do not commit, push or publish without authorization. Document current behavior
 and limits directly, without a separate review ledger.
+
+Keep patch decisions tied to exact released artifacts, not mod names or an open
+upstream issue alone. Check the affected propeller Ponder scene and working control
+scenes with shaders enabled and disabled. Verify resource reload and framebuffer
+restoration when those paths change. Record the upstream condition that permits
+retiring the fix; do not absorb unrelated terrain or resource-pack changes.
