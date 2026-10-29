@@ -1,48 +1,40 @@
-# Veil Iris Fix
+# Veil Iris Fix (archived)
 
-Corrects framebuffer handling when Veil shaders run alongside Iris. This restores
-rendering in offscreen scenes such as Aeronautics' propeller Ponder animation.
+This repository is archived and is no longer maintained. Its framebuffer correction
+is maintained in [Create Sky Compat](https://github.com/mannie-exe/create-sky-compat),
+Use [0.6.1 or later](https://github.com/mannie-exe/create-sky-compat/releases/tag/v0.6.1)
+for the incorporated adapter and subsequent single-block shader correction.
+No further standalone releases or fixes are planned.
 
-## Installation
+Create Sky Compat requires no content mods and offers independent startup switches.
+Use its optional `rendering.veil_framebuffer` adaptation with the supported Veil/Iris
+combination. Remove the standalone Veil Iris Fix JAR when enabling that replacement.
+See the replacement's [configuration](https://github.com/mannie-exe/create-sky-compat/blob/main/docs/configuration.md)
+and [verification limits](https://github.com/mannie-exe/create-sky-compat/blob/main/docs/development/verification.md).
 
-Download the binary JAR from [GitHub releases](https://github.com/mannie-exe/veil-iris-fix/releases)
-and place it in the client's `mods/` directory. Do not use the sources JAR or
-install the patch on a dedicated server. No configuration is required.
+The source, release history, licenses, and earlier verification remain available
+for reference. Incorporation does not turn historical standalone checks into
+verification of new adapters. This is an independent patch, not an upstream Veil
+or Iris release.
 
-| Dependency | Supported version |
-| --- | --- |
-| Minecraft | 1.21.1 |
-| NeoForge | 21.1.264 or later in the 21.1 series |
-| Java | 21 |
-| Veil | 4.3.2, tested as bundled by Sable 2.0.6 |
-| Iris | 1.8.14-beta.1+mc1.21.1 |
+## Project history
 
-Veil and Iris are required. This is not a general Veil fix for installations
-without Iris. Create Sky is not required, and the patch needs no resource pack.
+> Veil Iris Fix was a narrow client patch for Veil 4.3.2 and Iris
+> 1.8.14-beta.1+mc1.21.1, including Veil bundled by Sable 2.0.6. It restored separate
+> read/draw framebuffer bindings around shader activation and selected Iris's
+> active world target appropriately. It followed
+> [Veil PR #213](https://github.com/FoundryMC/Veil/pull/213).
+>
+> Version 0.1.0 included native macOS arm64 checks with Complementary Unbound
+> r5.9.3 and Euphoria Patches 1.10.5, covering Ponder, burner flames, inventory,
+> and shader reload. Those checks did not establish other drivers or shader packs.
 
-## Behavior and limits
-
-The patch restores the framebuffer bindings around Veil shader activation and
-uses Iris's active world target during world rendering. It follows
-[Veil PR #213](https://github.com/FoundryMC/Veil/pull/213).
-
-Native checks cover macOS arm64 with Complementary Unbound r5.9.3 and Euphoria
-Patches 1.10.5, including Ponder, burner flames, inventory and shader reload.
-Other shader packs and drivers are not established by those checks. Veil's
-existing `Unsupported Uniform Type: bool` errors are outside this correction.
-See [verification](docs/verification.md) for the exact artifacts and test limits.
-
-Remove the patch when the installed upstream release contains the complete
-correction. An upstream PR merging does not establish that a particular release
-includes it. Follow the [dependency update procedure](docs/development.md#dependency-updates)
-before changing Veil or Iris versions.
-
-## Development
-
-Use Java 21 and `./gradlew check build`. See [development](docs/development.md)
-for implementation and tests, and [publishing](docs/publishing.md) for releases.
+Historical implementation, build, verification, and publishing records remain in
+[docs/development.md](docs/development.md), [docs/verification.md](docs/verification.md),
+and [docs/publishing.md](docs/publishing.md). Active dependency updates, fixes, and
+releases belong to Create Sky Compat.
 
 ## License
 
 LGPL-3.0-only. See [NOTICE](NOTICE), [LGPLv3](LICENSE.LESSER.txt), and
-[GPLv3](LICENSE.txt). This is an independent compatibility patch.
+[GPLv3](LICENSE.txt). These notices also accompany the incorporated component.
